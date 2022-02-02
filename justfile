@@ -1,4 +1,5 @@
 set dotenv-load := true
+image_name := 'pyspark-sa:dev'
 
 build:
     docker build -t {{image_name}} .
