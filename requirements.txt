@@ -7,3 +7,4 @@ cachetools==5.0.0
 pyspark-pandas==0.0.7
 pyarrow==6.0.1
 textblob==0.17.1
+confluent-kafka==1.8.2
