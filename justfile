@@ -1,15 +1,17 @@
 set dotenv-load := true
 image_name := 'pyspark-sa:dev'
-spark_submit_args := 'org.apache.spark:spark-sql-kafka-0-10_2.13:3.2.0'
+spark_submit_args := 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0'
 
 build:
     docker build -t {{image_name}} .
 
 set positional-arguments
 @run *args='':
-    docker run --mount type=bind,source="$(pwd)",target=/opt/application \
+    docker run -u 0 --mount type=bind,source="$(pwd)",target=/opt/application \
          --mount type=tmpfs,destination=/tmp \
-        {{image_name}} driver --packages {{spark_submit_args}} local:///opt/application/site-packages/main.py "$@"
+         --entrypoint /opt/spark/bin/spark-submit \
+        {{image_name}} --packages {{spark_submit_args}} \
+        local:///opt/application/site-packages/main.py "$@"
 
 shell:
     docker run -it \
