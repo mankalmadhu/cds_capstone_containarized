@@ -1,16 +1,20 @@
 FROM datamechanics/spark:3.2-latest
 
 USER root
-RUN apt-get update && apt-get --assume-yes install build-essential && pip install --upgrade pip
-USER 185
+RUN apt-get update 
+RUN  apt-get --assume-yes install build-essential openssh-server sudo vim-tiny &&  pip install --upgrade pip
+RUN useradd -rm -s /bin/bash -g root -G sudo -u 1000 test
+RUN  echo 'test:test' | chpasswd
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER test
 
 ENV PYSPARK_MAJOR_PYTHON_VERSION=3
+
 WORKDIR /opt/application/
 
 COPY .env .
 COPY requirements.txt .
 RUN pip install  -r requirements.txt 
    
-
-
 ADD site-packages site-packages
