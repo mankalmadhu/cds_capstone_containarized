@@ -2,3 +2,4 @@
 /.sa
 /.vscode
 **/site-packages/**/*.pyc
+spark-job/.env
