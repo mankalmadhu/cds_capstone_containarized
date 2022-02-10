@@ -1,14 +1,16 @@
 from fastapi import Body, FastAPI, Form, Request
 from fastapi.responses import JSONResponse
 from worker import create_task
+from req_boms import TaskModel
 from celery.result import AsyncResult
 
 app = FastAPI()
 
 
 @app.post("/tasks", status_code=201)
-def run_task():
-    task = create_task.delay()
+def run_task(task_model: TaskModel):
+    task = create_task.delay(task_model.operation.name, task_model.persist,
+                             task_model.verbose)
     return JSONResponse({"task_id": task.id})
 
 
