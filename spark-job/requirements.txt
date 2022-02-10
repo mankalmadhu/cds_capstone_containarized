@@ -8,3 +8,5 @@ pyspark-pandas==0.0.7
 pyarrow==6.0.1
 textblob==0.17.1
 confluent-kafka==1.8.2
+celery==5.1.2
+redis==4.1.3

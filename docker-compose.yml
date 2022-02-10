@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  web:
+    build: ./web
+    ports:
+      - 8004:8000
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    user: root
+    volumes:
+      - ./web:/usr/src/app
+      - ./spark-job:/usr/src/celery
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - PYTHONPATH=$$PYTHONPATH:/usr/src/celery/site-packages
+    depends_on:
+      - redis
+    
+  worker:
+    build: ./spark-job
+    command: celery --app=site-packages.worker.celery  worker --loglevel=debug --logfile=/tmp/celery.log
+    volumes:
+      - ./spark-job:/usr/src/app
+    tmpfs:
+      - /tmp
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:6-alpine
+ 

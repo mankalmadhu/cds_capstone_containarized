@@ -16,5 +16,11 @@ WORKDIR /opt/application/
 COPY .env .
 COPY requirements.txt .
 RUN pip install  -r requirements.txt 
+
+USER root
+RUN python -m nltk.downloader stopwords
+RUN python -m nltk.downloader wordnet
+RUN python -m nltk.downloader omw-1.4
+USER test
    
 ADD site-packages site-packages
