@@ -3,3 +3,4 @@
 /.vscode
 **/site-packages/**/*.pyc
 spark-job/.env
+web/__pycache__/**.pyc

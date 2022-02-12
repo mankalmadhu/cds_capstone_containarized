@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum, auto
 from typing import Optional
 
@@ -21,7 +22,12 @@ class Operations(AutoName):
     stream_predict = auto()
 
 
-class TaskModel(BaseModel):
+class TaskBaseModel(BaseModel):
     operation: Operations = None
-    persist: Optional[bool] = False
+    save: Optional[bool] = False
     verbose: Optional[bool] = False
+
+
+class FetchDataModel(TaskBaseModel):
+    fetch_date: Optional[datetime] = None
+    total_tweets_to_fetch: Optional[int] = 0
