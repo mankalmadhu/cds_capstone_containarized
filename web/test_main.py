@@ -19,3 +19,33 @@ def test_run_fetch_task(mocker):
         ['--operation fetch', '--save ']))
 
     assert response.json() == {"task_id": '1234'}
+
+
+def test_model_test_task_e2e():
+
+    json_str = '{"operation":"model_test", "verbose": true}'
+
+    response = client.post("/tasks/model_test", json=json.loads(json_str))
+
+    content = response.json()
+    task_id = content["task_id"]
+    assert task_id
+
+    response = client.get(f"tasks/{task_id}")
+    content = response.json()
+    assert content == {
+        "task_id": task_id,
+        "task_status": "PENDING",
+        "task_result": None
+    }
+    assert response.status_code == 200
+
+    while content["task_status"] == "PENDING":
+        response = client.get(f"tasks/{task_id}")
+        content = response.json()
+
+    assert content == {
+        "task_id": task_id,
+        "task_status": "SUCCESS",
+        "task_result": True
+    }
