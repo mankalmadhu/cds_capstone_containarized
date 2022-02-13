@@ -39,9 +39,34 @@ def run_clean_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.clean)
 
 
+@app.post("/tasks/extract_features", status_code=201)
+def run_feature_extract_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.feature_extract)
+
+
+@app.post("/tasks/label", status_code=201)
+def run_label_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.label)
+
+
+@app.post("/tasks/train_model", status_code=201)
+def run_train_model_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.model_train)
+
+
 @app.post("/tasks/model_test", status_code=201)
 def run_model_test_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.model_test)
+
+
+@app.post("/tasks/stream_produce", status_code=201)
+def run_stream_produce_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.produce_tweet)
+
+
+@app.post("/tasks/stream_predict", status_code=201)
+def run_stream_predict_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.stream_predict)
 
 
 @app.get("/tasks/{task_id}")
