@@ -11,7 +11,7 @@ set positional-arguments
          --mount type=tmpfs,destination=/tmp \
          --entrypoint /opt/spark/bin/spark-submit \
         {{image_name}} --packages {{spark_submit_args}} \
-        local:///opt/application/site-packages/main.py "$@"
+        local:///opt/application/site-packages/spark_driver.py "$@"
 
 shell:
     docker run -it \
