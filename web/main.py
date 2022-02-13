@@ -1,10 +1,27 @@
 from fastapi import Body, FastAPI, Form, Request
 from fastapi.responses import JSONResponse
 from worker import create_task
-from web.req_models import TaskBaseModel, FetchDataModel
+from req_models import TaskBaseModel, FetchDataModel
 from celery.result import AsyncResult
+from operations import Operations
 
 app = FastAPI()
+
+
+def run_task_base(task_model, operation):
+
+    command_options = [
+        f'--operation {operation.name}', '--save' if task_model.save else '',
+        '--verbose' if task_model.verbose else ''
+    ]
+
+    command_options.extend([
+        f'--{k} {v}' for k, v in task_model.dict().items()
+        if v and k not in ['save', 'verbose']
+    ])
+
+    task = create_task.delay(" ".join(command_options))
+    return JSONResponse({"task_id": task.id})
 
 
 @app.post("/tasks", status_code=201)
@@ -14,16 +31,17 @@ def run_task(task_model: TaskBaseModel):
 
 @app.post("/tasks/fetch_data", status_code=201)
 def run_fetch_task(task_model: FetchDataModel):
+    return run_task_base(task_model, Operations.fetch)
 
-    command_options = [
-        f'--{k} {v}' for k, v in task_model.dict().items()
-        if v and k != 'operation'
-    ]
 
-    command_options.insert(0, f'--operation {task_model.operation.name}')
+@app.post("/tasks/clean_data", status_code=201)
+def run_fetch_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.clean)
 
-    task = create_task.delay(command_options)
-    return JSONResponse({"task_id": task.id})
+
+@app.post("/tasks/model_test", status_code=201)
+def run_fetch_task(task_model: TaskBaseModel):
+    return run_task_base(task_model, Operations.model_test)
 
 
 @app.get("/tasks/{task_id}")
