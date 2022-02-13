@@ -35,12 +35,12 @@ def run_fetch_task(task_model: FetchDataModel):
 
 
 @app.post("/tasks/clean_data", status_code=201)
-def run_fetch_task(task_model: TaskBaseModel):
+def run_clean_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.clean)
 
 
 @app.post("/tasks/model_test", status_code=201)
-def run_fetch_task(task_model: TaskBaseModel):
+def run_model_test_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.model_test)
 
 
