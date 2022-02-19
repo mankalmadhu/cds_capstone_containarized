@@ -13,7 +13,6 @@ ENV PYSPARK_MAJOR_PYTHON_VERSION=3
 
 WORKDIR /opt/application/
 
-COPY .env .
 COPY requirements.txt .
 RUN pip install  -r requirements.txt 
 

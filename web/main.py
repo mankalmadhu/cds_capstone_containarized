@@ -59,7 +59,7 @@ def run_model_test_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.model_test)
 
 
-@app.post("/tasks/stream_produce", status_code=201)
+""" @app.post("/tasks/stream_produce", status_code=201)
 def run_stream_produce_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.produce_tweet)
 
@@ -67,6 +67,7 @@ def run_stream_produce_task(task_model: TaskBaseModel):
 @app.post("/tasks/stream_predict", status_code=201)
 def run_stream_predict_task(task_model: TaskBaseModel):
     return run_task_base(task_model, Operations.stream_predict)
+ """
 
 
 @app.get("/tasks/{task_id}")

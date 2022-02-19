@@ -12,25 +12,53 @@ services:
       - ./web:/usr/src/app
       - ./spark-job:/usr/src/celery
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - PYTHONPATH=$$PYTHONPATH:/usr/src/celery/site-packages
+    env_file:
+      - ./.env
     depends_on:
       - redis
     
   worker:
     build: ./spark-job
-    command: celery --app=site-packages.worker.celery  worker --loglevel=debug --logfile=/tmp/celery.log
+    command: "celery --app=site-packages.worker.celery  worker 
+             --loglevel=debug --logfile=/tmp/celery.log"
     volumes:
       - ./spark-job:/usr/src/app
     tmpfs:
       - /tmp
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
       - web
       - redis
+    env_file:
+      - ./.env
+
+
+  stream-producer:
+    build: ./spark-job
+    command: "/opt/spark/bin/spark-submit 
+              local:///opt/application/site-packages/spark_driver.py 
+              --operation produce_tweet"
+    volumes:
+      - ./spark-job:/usr/src/app
+    tmpfs:
+      - /tmp
+    env_file:
+      - ./.env
+   
+
+  stream-consumer:
+    build: ./spark-job
+    command: "/opt/spark/bin/spark-submit
+             --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0
+             local:///opt/application/site-packages/spark_driver.py
+             --operation stream_predict"
+    volumes:
+      - ./spark-job:/usr/src/app
+    tmpfs:
+      - /tmp
+    env_file:
+      - ./.env
+  
 
   redis:
     image: redis:6-alpine
