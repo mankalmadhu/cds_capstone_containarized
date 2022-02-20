@@ -21,11 +21,8 @@ def test_run_fetch_task(mocker):
     assert response.json() == {"task_id": '1234'}
 
 
-def test_model_test_task_e2e():
-
-    json_str = '{"operation":"model_test", "verbose": true}'
-
-    response = client.post("/tasks/model_test", json=json.loads(json_str))
+def progress_checker(uri, json_body_str):
+    response = client.post(uri, json=json.loads(json_body_str))
 
     content = response.json()
     task_id = content["task_id"]
@@ -49,3 +46,15 @@ def test_model_test_task_e2e():
         "task_status": "SUCCESS",
         "task_result": True
     }
+
+
+def test_model_test_task_e2e():
+
+    json_str = '{"verbose": true}'
+    progress_checker("/tasks/model_test", json_str)
+
+
+def test_feature_extract_task():
+
+    json_str = '{"verbose": true}'
+    progress_checker("/tasks/extract_features", json_str)
