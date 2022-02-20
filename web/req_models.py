@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
-from operations import Operations
+from ml_boms import Operations
 
 
 class TaskBaseModel(BaseModel):

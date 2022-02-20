@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from worker import create_task
 from req_models import TaskBaseModel, FetchDataModel
 from celery.result import AsyncResult
-from operations import Operations
+from ml_boms import Operations
 
 app = FastAPI()
 
