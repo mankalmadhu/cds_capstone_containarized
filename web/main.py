@@ -1,7 +1,7 @@
 from fastapi import Body, FastAPI, Form, Request
 from fastapi.responses import JSONResponse
 from worker import create_task
-from req_models import TaskBaseModel, FetchDataModel
+from ml_boms import TaskBaseModel, FetchDataModel, TrainModel
 from celery.result import AsyncResult
 from ml_boms import Operations
 
@@ -11,14 +11,8 @@ app = FastAPI()
 def run_task_base(task_model, operation):
 
     command_options = [
-        f'--operation {operation.name}', '--save' if task_model.save else '',
-        '--verbose' if task_model.verbose else ''
+        f'--operation {operation.name}', f'--params \'{task_model.json()}\''
     ]
-
-    command_options.extend([
-        f'--{k} {v}' for k, v in task_model.dict().items()
-        if v and k not in ['save', 'verbose']
-    ])
 
     task = create_task.delay(" ".join(command_options))
     return JSONResponse({"task_id": task.id})
@@ -50,7 +44,7 @@ def run_label_task(task_model: TaskBaseModel):
 
 
 @app.post("/tasks/train_model", status_code=201)
-def run_train_model_task(task_model: TaskBaseModel):
+def run_train_model_task(task_model: TrainModel):
     return run_task_base(task_model, Operations.model_train)
 
 

@@ -15,8 +15,10 @@ def test_run_fetch_task(mocker):
 
     response = client.post("/tasks/fetch_data", json=json.loads(json_str))
 
-    wroker_mock.assert_called_once_with(" ".join(
-        ['--operation fetch', '--save ']))
+    wroker_mock.assert_called_once_with(" ".join([
+        '--operation fetch',
+        '--params \'{"save": true, "verbose": false, "fetch_date": null, "total_tweets_to_fetch": 0}\''
+    ]))
 
     assert response.json() == {"task_id": '1234'}
 
