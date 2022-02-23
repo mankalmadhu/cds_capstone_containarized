@@ -29,6 +29,8 @@ services:
     depends_on:
       - web
       - redis
+    environment:
+      - PYTHONPATH=$$PYTHONPATH:/opt/application/site-packages
     env_file:
       - ./.env
 
