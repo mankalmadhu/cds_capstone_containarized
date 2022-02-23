@@ -53,7 +53,7 @@ services:
     command: "/opt/spark/bin/spark-submit
              --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0
              local:///opt/application/site-packages/spark_driver.py
-             --operation stream_predict --params '{}'"
+             --operation stream_predict --params '{\"verbose\": true, \"save\":false}'"
     volumes:
       - ./spark-job:/usr/src/app
     tmpfs:
