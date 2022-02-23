@@ -39,7 +39,7 @@ services:
     build: ./spark-job
     command: "/opt/spark/bin/spark-submit 
               local:///opt/application/site-packages/spark_driver.py 
-              --operation produce_tweet"
+              --operation produce_tweet --params '{\"enable_tweet_scraping\" : false}'"
     volumes:
       - ./spark-job:/usr/src/app
     tmpfs:
@@ -53,7 +53,7 @@ services:
     command: "/opt/spark/bin/spark-submit
              --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0
              local:///opt/application/site-packages/spark_driver.py
-             --operation stream_predict"
+             --operation stream_predict --params '{}'"
     volumes:
       - ./spark-job:/usr/src/app
     tmpfs:
