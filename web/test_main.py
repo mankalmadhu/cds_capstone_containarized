@@ -60,3 +60,9 @@ def test_feature_extract_task():
 
     json_str = '{"verbose": true}'
     progress_checker("/tasks/extract_features", json_str)
+
+
+def test_model_train_task():
+
+    json_str = '{"verbose": true, "ml_model":"naive_bayes", "features": ["idf_features", "cv_features"]}'
+    progress_checker("/tasks/train_model", json_str)
